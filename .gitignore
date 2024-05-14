@@ -10,6 +10,6 @@ __pycache__/
 /dataSources/
 /dataSources.local.xml
 /.idea/
-weigths/
+weights/
 src/ai_models/stt/weights/*
 venv/

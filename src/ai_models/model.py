@@ -84,7 +84,6 @@ class Speech2text(Speech2TextInterface):
         Returns:
             str: model output.
         """
-
         inputs = load_audio(audio)
         inputs_chunks = split_audio(inputs, sample_rate=16000)
 

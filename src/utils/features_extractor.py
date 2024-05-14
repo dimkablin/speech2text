@@ -1,7 +1,5 @@
 """Feture extractor utilities"""
 from os import PathLike
-from typing import BinaryIO
-import numpy as np
 import torch
 import torchaudio
 from pydub import AudioSegment

@@ -23,7 +23,7 @@ This project includes a wrapper around speech-to-text models from the Transforme
 
 
 # Table of contents
-```python
+```bash
 speech2text_factory/
 │
 ├── docker-compose.yml              # Docker Compose configuration file
@@ -91,7 +91,7 @@ To build and run a Docker container with a specific Speech2Text model, follow th
    ```bash
    docker run -p PORT:8000 --gpus all --name CONTAINER_NAME --env MODEL_NAME="model-name" --env USE_CUDA="True" speech2text
    ```
-   Replace `PORT` with the port number on which you intend to run the container and `model-name` with the desired speech-to-text model.
+   Replace `PORT` with the port number on which you intend to run the container and `model-name` with the desired speech-to-text model from [Hugging Face](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=trending).
 
 Explanation:
 - `-p PORT:8000`: Maps `PORT` on your host to port 8000 in the container.

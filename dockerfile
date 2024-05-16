@@ -1,12 +1,12 @@
-FROM python:3.10
+FROM python:3.10-slim
 
 WORKDIR /app
 COPY . /app
 VOLUME ["/src", "/app/src"]
 
-RUN apt-get update && apt-get install -y ffmpeg libavcodec-extra build-essential
-RUN python3 -m pip install torch torchvision torchaudio
-RUN python3 -m pip install -r requirements.txt
+RUN apt-get update \
+    && python3 -m pip install --no-cache-dir -r requirements.txt \
+    && pip3 install --no-cache-dir torch torchaudio
 
 EXPOSE 8000
 ENV NAME env_file

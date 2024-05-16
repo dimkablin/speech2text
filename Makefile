@@ -16,6 +16,7 @@ clean: clean-build clean-pyc
 	rm -rf .mypy_cache/
 	rm -rf .pytest_cache/
 	rm -f .coverage
+	rm -f .__pycache__/
 
 
 clean-build:
@@ -27,3 +28,5 @@ clean-build:
 clean-pyc:
 	find . -name '*.pyc' -exec rm -rf {} +
 	find . -name '*.pyo' -exec rm -rf {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -rf {} +

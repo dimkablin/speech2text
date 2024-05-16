@@ -2,6 +2,7 @@
 from io import BytesIO
 import torch
 from transformers import (
+    WhisperForConditionalGeneration,
     AutoProcessor, 
     AutoModelForSpeechSeq2Seq, 
     pipeline
@@ -21,7 +22,6 @@ class Speech2text(Speech2TextInterface):
                  dtype: torch.dtype = torch.float32,
                  language: str = "russian"):
         self.model_name = model_name
-        self.device = device
         self.dtype = dtype
         self.language = language
 
@@ -30,27 +30,23 @@ class Speech2text(Speech2TextInterface):
             self.dtype = torch.float16
         else:
             self.device = "cpu"
+        self.device = torch.device(self.device)
         
         self.processor = AutoProcessor.from_pretrained(self.model_name)
         self.model = AutoModelForSpeechSeq2Seq.from_pretrained(
             self.model_name,
-            low_cpu_mem_usage=True, 
-            use_safetensors=True
-        )
+            low_cpu_mem_usage=True
+        ).to(device=self.device, dtype=self.dtype)
 
         self.pipe = pipeline(
             "automatic-speech-recognition",
             model=self.model,
             tokenizer=self.processor.tokenizer,
             feature_extractor=self.processor.feature_extractor,
-            max_new_tokens=128,
-            chunk_length_s=30,
-            batch_size=16,
             return_timestamps=False,
             torch_dtype=self.dtype,
-            device=device,
+            device=self.device,
         )
-
 
     def __call__(self, audio: BytesIO | str) -> str:
         """ Get model output from the pipeline.
@@ -61,12 +57,15 @@ class Speech2text(Speech2TextInterface):
         Returns:
             str: model output.
         """
-        inputs = load_audio(audio)
-        # inputs = inputs.to(dtype=self.dtype)
+        inputs = load_audio(audio).numpy()
 
-        outputs = self.pipe(inputs.numpy(),
-                            generate_kwargs={"language": self.language})
-        return outputs['text']
+        kwargs = {}
+
+        if isinstance(self.model, WhisperForConditionalGeneration):
+            kwargs["generate_kwargs"]={"language": self.language, "task": "transcribe"}
+        
+        output = self.pipe(inputs, **kwargs)
+        return output['text']
 
     def __str__(self) -> str:
         return self.model_name
@@ -75,8 +74,8 @@ class Speech2text(Speech2TextInterface):
         """Return information of the model."""
         result = {
             "model": self.model_name,
-            "dtype": str(self.dtype),
-            "device": self.device,
+            "dtype": str(self.model.dtype),
+            "device": self.model.device,
             "languge": self.language
         }
         return result

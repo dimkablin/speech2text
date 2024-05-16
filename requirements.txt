@@ -1,8 +1,6 @@
 Cython
 pydub
 accelerate # for low_cpu_memory usage
-# python-multipart
-# ffmpeg-downloader
 fastapi~=0.95
 uvicorn~=0.22
 requests~=2.30

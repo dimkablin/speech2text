@@ -1,8 +1,10 @@
 """Feture extractor utilities"""
+from io import BytesIO
 from os import PathLike
 import torch
 import torchaudio
-from pydub import AudioSegment
+import librosa
+import numpy as np
 
 
 def stereo2mono(audio: torch.Tensor) -> torch.Tensor:
@@ -21,7 +23,7 @@ def load_audio(path: str | PathLike) -> torch.Tensor:
     speech = resampler(speech)
     return speech.squeeze()
 
-def split_audio(audio: torch.Tensor, sample_rate: int, chunk_size_sec=30) -> torch.Tensor:
+def split_audio(audio: torch.Tensor, sample_rate: int, chunk_size_sec=60) -> torch.Tensor:
     # вычисляем сколько чанков будет
     chunk_size = sample_rate * chunk_size_sec
     num_chunks = audio.size(0) // chunk_size
@@ -42,3 +44,16 @@ def split_audio(audio: torch.Tensor, sample_rate: int, chunk_size_sec=30) -> tor
         chunks.append(last_chunk)
 
     return chunks
+
+def split_audio2(audio: np.ndarray, sample_rate: int = 16000, top_db: int = 30):
+    """ Split audio into segments based on silence using librosa. """
+    intervals = librosa.effects.split(audio, top_db=top_db)
+    print(intervals)
+    segments = [audio[start:end] for start, end in intervals]
+    return segments
+
+def reduce_noise(audio: np.ndarray, sample_rate: int = 16000):
+    """ Reduce noise from audio using a high-pass filter with librosa. """
+    # Apply a high-pass filter to remove low-frequency noise
+    audio_filtered = librosa.effects.preemphasis(audio)
+    return audio_filtered

@@ -7,3 +7,4 @@ requests~=2.30
 transformers~=4.38.2
 gradio~=4.31.3
 soundfile
+librosa # to segment the audio and delete the noize 

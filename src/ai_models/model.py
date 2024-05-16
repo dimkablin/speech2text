@@ -1,6 +1,7 @@
 """Speech to text model initialization file"""
 from io import BytesIO
 import torch
+
 from transformers import (
     WhisperForConditionalGeneration,
     AutoProcessor, 
@@ -9,7 +10,7 @@ from transformers import (
 )
 
 from ai_models.speech2text_interface import Speech2TextInterface
-from utils.features_extractor import load_audio
+from utils.features_extractor import *
 from env import USE_CUDA, MODEL_NAME
 
 
@@ -24,6 +25,7 @@ class Speech2text(Speech2TextInterface):
         self.model_name = model_name
         self.dtype = dtype
         self.language = language
+        self.sample_rate = 16000
 
         if USE_CUDA is True and torch.cuda.is_available():
             self.device = "cuda:0"
@@ -44,6 +46,8 @@ class Speech2text(Speech2TextInterface):
             tokenizer=self.processor.tokenizer,
             feature_extractor=self.processor.feature_extractor,
             return_timestamps=False,
+            chunk_length_s=30,
+            batch_size=16,
             torch_dtype=self.dtype,
             device=self.device,
         )
@@ -57,14 +61,14 @@ class Speech2text(Speech2TextInterface):
         Returns:
             str: model output.
         """
-        inputs = load_audio(audio).numpy()
+        input_ = load_audio(audio).numpy()
+        input_ = reduce_noise(input_, sample_rate=self.sample_rate)
 
         kwargs = {}
-
         if isinstance(self.model, WhisperForConditionalGeneration):
             kwargs["generate_kwargs"]={"language": self.language, "task": "transcribe"}
-        
-        output = self.pipe(inputs, **kwargs)
+
+        output = self.pipe(input_, **kwargs)
         return output['text']
 
     def __str__(self) -> str:
@@ -75,7 +79,7 @@ class Speech2text(Speech2TextInterface):
         result = {
             "model": self.model_name,
             "dtype": str(self.model.dtype),
-            "device": self.model.device,
+            "device": str(self.model.device),
             "languge": self.language
         }
         return result

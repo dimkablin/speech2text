@@ -23,7 +23,7 @@ This project includes a wrapper around speech-to-text models from the Transforme
 
 
 # Table of contents
-```bash
+```python
 speech2text_factory/
 │
 ├── docker-compose.yml              # Docker Compose configuration file
@@ -63,15 +63,15 @@ speech2text_factory/
 To install all dependencies and run the project locally, follow these steps:
 
 1. Build the project:
-   ```sh
+   ```bash
    make build
    ```
 2. Navigate to the `src` directory:
-   ```sh
+   ```bash
    cd src
    ```
 3. Run the main script from ```src``` directory:
-   ```sh
+   ```bash
    python3 main.py
    ```
 
@@ -82,13 +82,13 @@ To build and run a Docker container with a specific Speech2Text model, follow th
 
 1. **Build the Docker image:**
    In the `speech2text` directory, run:
-   ```sh
+   ```bash
    docker build -t speech2text .
    ```
    This command creates a Docker image named `speech2text`.
 
 2. **Run the Docker container:**
-   ```sh
+   ```bash
    docker run -p PORT:8000 --gpus all --name CONTAINER_NAME --env MODEL_NAME="model-name" --env USE_CUDA="True" speech2text
    ```
    Replace `PORT` with the port number on which you intend to run the container and `model-name` with the desired speech-to-text model.

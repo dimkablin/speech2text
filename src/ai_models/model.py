@@ -1,5 +1,6 @@
 """Speech to text model initialization file"""
 from io import BytesIO
+from fastapi.responses import JSONResponse
 import torch
 
 from transformers import (
@@ -82,4 +83,4 @@ class Speech2text(Speech2TextInterface):
             "device": str(self.model.device),
             "languge": self.language
         }
-        return result
+        return JSONResponse(content=result)

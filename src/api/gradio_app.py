@@ -12,13 +12,13 @@ async def speech_to_text(audio):
     bytes_io = BytesIO()
     sf.write(bytes_io, samples, sr, subtype='PCM_16', format='WAV')
     bytes_io.seek(0)
-    
+
     result = speech2text(bytes_io)
     return result
 
 
 input_audio = gr.Audio(
-    sources=["microphone"],
+    sources=["microphone", "upload"],
     waveform_options=gr.WaveformOptions(
         waveform_color="#00B473",
         waveform_progress_color="#00B473",
@@ -36,11 +36,12 @@ with gr.Blocks() as iface:
     """
     )
 
-    gr.JSON(speech2text.get_config())
+    gr.JSON(speech2text.get_config,
+            label="Model config")
 
     gr.Interface(
     fn=speech_to_text,
     inputs=input_audio,
-    outputs="textbox", 
+    outputs="textbox",
     allow_flagging=False
 )

@@ -6,7 +6,6 @@ from api.app.endpoint import speech2text
 
 async def speech_to_text(audio):
     sr, samples = audio
-
     # конвернтнуть из нампи в байты форматом PCM_16 в WAV файл
     # чтобы использовать существующий код
     bytes_io = BytesIO()

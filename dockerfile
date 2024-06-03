@@ -4,9 +4,9 @@ WORKDIR /app
 COPY . /app
 VOLUME ["/src", "/app/src"]
 
-RUN apt-get update \
-    && python3 -m pip install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir torch torchaudio
+RUN apt-get update && apt-get install -y build-essential ffmpeg \
+    && python3 -m pip install --default-timeout=100 --no-cache-dir -r requirements.txt \
+    && pip3 install --default-timeout=100 --no-cache-dir torch torchaudio
 
 EXPOSE 8000
 ENV NAME env_file

@@ -1,11 +1,12 @@
 """uvicorn server running app."""
 import uvicorn
+from env import PORT
 
 
 if __name__ == "__main__":
     uvicorn.run(
-        host="127.0.0.1",
-        port=8000,
+        host="0.0.0.0",
+        port=PORT,
         log_level="info",
         app="api.main:app",
         timeout_keep_alive=9999,

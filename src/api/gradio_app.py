@@ -17,7 +17,7 @@ async def speech_to_text(audio):
 
 
 input_audio = gr.Audio(
-    sources=["microphone", "upload"],
+    sources=["upload", "microphone"],
     waveform_options=gr.WaveformOptions(
         waveform_color="#00B473",
         waveform_progress_color="#00B473",

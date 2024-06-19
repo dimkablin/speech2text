@@ -12,4 +12,5 @@ EXPOSE 8000
 ENV NAME env_file
 
 WORKDIR /app/src
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--ssl-keyfile", "ssl/local_key.pem", "--ssl-certfile", "ssl/local_cert.pem"]
+CMD ["python3", "main.py"]
+# CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--ssl-keyfile", "ssl/local_key.pem", "--ssl-certfile", "ssl/local_cert.pem"]
